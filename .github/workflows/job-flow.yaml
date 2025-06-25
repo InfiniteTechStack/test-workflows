@@ -4,23 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  Approval-Backend:
+  Approval-Backend-Dev:
     runs-on: ubuntu-latest
-    environment: approval-backend
+    environment: approval-backend-dev
     steps:
       - name: Approval
-        run: echo 'Approved by backend!'  
-
-  Approval-SRE:
-    runs-on: ubuntu-latest
-    environment: approval-sre
-    steps:
-      - name: Approval
-        run: echo 'Approved by SRE!'       
+        run: echo 'Approved by backend for dev!'
 
   dev-secrets:
     runs-on: ubuntu-latest
-    needs: Approval-Backend
+    needs: Approval-Backend-Dev
     env:
       environment: dev
     steps:
@@ -36,9 +29,17 @@ jobs:
             echo "secrets.txt not found"
           fi
 
+  Approval-Backend-Uat:
+    runs-on: ubuntu-latest
+    needs: dev-secrets
+    environment: approval-backend-uat
+    steps:
+      - name: Approval
+        run: echo 'Approved by backend for uat!'
+
   uat-secrets:
     runs-on: ubuntu-latest
-    needs: [Approval-Backend, dev-secrets]
+    needs: [Approval-Backend-Uat, dev-secrets]
     env:
       environment: uat
     steps:
@@ -54,9 +55,17 @@ jobs:
             echo "secrets.txt not found"
           fi
 
+  Approval-Backend-Preprod:
+    runs-on: ubuntu-latest
+    needs: uat-secrets
+    environment: approval-backend-preprod
+    steps:
+      - name: Approval
+        run: echo 'Approved by backend for preprod!'
+
   preprod-secrets:
     runs-on: ubuntu-latest
-    needs: [Approval-Backend, uat-secrets]
+    needs: [Approval-Backend-Preprod, uat-secrets]
     env:
       environment: preprod
     steps:
@@ -71,6 +80,14 @@ jobs:
           else
             echo "secrets.txt not found"
           fi
+
+  Approval-SRE:
+    runs-on: ubuntu-latest
+    needs: preprod-secrets
+    environment: approval-sre
+    steps:
+      - name: Approval
+        run: echo 'Approved by SRE!'
 
   prod-secrets:
     runs-on: ubuntu-latest
