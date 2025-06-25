@@ -6,7 +6,7 @@ on:
 jobs:
   Approval-Backend-Dev:
     runs-on: ubuntu-latest
-    environment: approval-backend-dev
+    environment: approval-backend
     steps:
       - name: Approval
         run: echo 'Approved by backend for dev!'
@@ -32,7 +32,7 @@ jobs:
   Approval-Backend-Uat:
     runs-on: ubuntu-latest
     needs: dev-secrets
-    environment: approval-backend-uat
+    environment: approval-backend
     steps:
       - name: Approval
         run: echo 'Approved by backend for uat!'
@@ -58,7 +58,7 @@ jobs:
   Approval-Backend-Preprod:
     runs-on: ubuntu-latest
     needs: uat-secrets
-    environment: approval-backend-preprod
+    environment: approval-backend
     steps:
       - name: Approval
         run: echo 'Approved by backend for preprod!'
