@@ -14,8 +14,10 @@ jobs:
   dev-secrets:
     runs-on: ubuntu-latest
     needs: Approval-Backend-Dev
+    environment: dev    
     env:
-      environment: dev
+      # environment: dev
+      AZURE_KEYVAULT: ${{ vars.AZURE_KEYVAULT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,8 +44,9 @@ jobs:
   uat-secrets:
     runs-on: ubuntu-latest
     needs: [Approval-Backend-Uat, dev-secrets]
+    environment: uat
     env:
-      environment: uat
+      # environment: uat
       AZURE_KEYVAULT: ${{ vars.AZURE_KEYVAULT }}
     steps:
       - name: Checkout repository
@@ -71,8 +74,9 @@ jobs:
   preprod-secrets:
     runs-on: ubuntu-latest
     needs: [Approval-Backend-Preprod, uat-secrets]
+    environment: preprod
     env:
-      environment: preprod
+      # environment: preprod
       AZURE_KEYVAULT: ${{ vars.AZURE_KEYVAULT }}
     steps:
       - name: Checkout repository
@@ -100,8 +104,9 @@ jobs:
   prod-secrets:
     runs-on: ubuntu-latest
     needs: [Approval-SRE, preprod-secrets]
+    environment: prod
     env:
-      environment: prod
+      # environment: prod
       AZURE_KEYVAULT: ${{ vars.AZURE_KEYVAULT }}
     steps:
       - name: Checkout repository
